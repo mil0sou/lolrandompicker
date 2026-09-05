@@ -13,6 +13,7 @@ Dépendances : pip install requests psutil Pillow
 
 import json
 import random
+import sys
 import threading
 import time
 import tkinter as tk
@@ -28,8 +29,15 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 ROLES = ["top", "jungle", "middle", "bottom", "utility"]
 ROLE_LABELS = {"top": "TOP", "jungle": "JUNGLE", "middle": "MID", "bottom": "BOT", "utility": "SUPPORT"}
 
-POOLS_FILE = Path(__file__).parent / "pools.json"
-ICON_DIR = Path(__file__).parent / "champion_icons"
+# En .exe (PyInstaller --onefile), __file__ pointe vers un dossier temporaire
+# qui disparaît à la fermeture : on utilise le dossier du .exe à la place.
+if getattr(sys, "frozen", False):
+    BASE_DIR = Path(sys.executable).parent
+else:
+    BASE_DIR = Path(__file__).parent
+
+POOLS_FILE = BASE_DIR / "pools.json"
+ICON_DIR = BASE_DIR / "champion_icons"
 ICON_SIZE = 44
 
 DEFAULT_POOLS = {
